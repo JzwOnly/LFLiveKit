@@ -512,7 +512,6 @@ Failed:
 }
 
 - (void)_reconnect{
-    [NSObject cancelPreviousPerformRequestsWithTarget:self];
     
     _isReconnecting = NO;
     if(_isConnected) return;

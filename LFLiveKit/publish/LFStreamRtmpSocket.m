@@ -489,7 +489,7 @@ Failed:
             self.isConnecting = NO;
             self.isReconnecting = YES;
             dispatch_async(dispatch_get_main_queue(), ^{
-                 [self performSelector:@selector(_reconnect) withObject:nil afterDelay:self.reconnectInterval];
+                 [self performSelector:@selector(_delayedReconnect) withObject:nil afterDelay:self.reconnectInterval];
             });
            
         } else if (self.retryTimes4netWorkBreaken >= self.reconnectCount) {
@@ -500,6 +500,14 @@ Failed:
                 [self.delegate socketDidError:self errorCode:LFLiveSocketError_ReConnectTimeOut];
             }
         }
+    });
+}
+
+- (void)_delayedReconnect {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+
+    dispatch_async(self.rtmpSendQueue, ^{
+	    [self _reconnect];
     });
 }
 
